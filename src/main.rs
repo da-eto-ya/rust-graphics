@@ -4,6 +4,7 @@ use image::{
     ImageBuffer,
     Pixel,
 };
+use image::imageops::flip_vertical;
 use std::ops::{
     Deref,
     DerefMut,
@@ -19,14 +20,26 @@ where P: Pixel + 'static,
       P::Subpixel: 'static {
 
     fn line(&mut self, x0: u32, y0: u32, x1: u32, y1: u32, color: P) -> &mut Self {
-        let mut t = 0.0;
-        let step = 0.1;
+        if x0 == x1 && y0 == y1 {
+            self.put_pixel(x0, y0, color);
+        } else {
+            let transpose = (x0 as i32 - x1 as i32).abs() < (y0 as i32 - y1 as i32).abs();
+            let reverse = (!transpose && x0 > x1) || (transpose && y0 > y1);
+            let a0 = if transpose {if reverse {y1} else {y0}} else {if reverse {x1} else {x0}};
+            let a1 = if transpose {if reverse {y0} else {y1}} else {if reverse {x0} else {x1}};
+            let b0 = if transpose {if reverse {x1} else {x0}} else {if reverse {y1} else {y0}};
+            let b1 = if transpose {if reverse {x0} else {x1}} else {if reverse {y0} else {y1}};
 
-        while t < 1.0 {
-            let x = ((x0 as f64) * (1.0 - t) + (x1 as f64) * t) as u32;
-            let y = ((y0 as f64) * (1.0 - t) + (y1 as f64) * t) as u32;
-            self.put_pixel(x, y, color);
-            t += step;
+            for a in a0..a1+1 {
+                let t = (a - a0) as f64 / (a1 - a0) as f64;
+                let b = (b0 as f64 * (1.0 - t) + b1 as f64 * t) as u32;
+
+                if transpose {
+                    self.put_pixel(b, a, color);
+                } else {
+                    self.put_pixel(a, b, color);
+                }
+            }
         }
 
         self
@@ -40,9 +53,11 @@ fn main() {
     // image processing
     let red = image::Rgb([0xff, 0x00, 0x00]);
     let white = image::Rgb([0xff, 0xff, 0xff]);
-    img.line(0, 0, 99, 99, white)
-        .line(10, 10, 12, 99, red)
-        .line(99, 0, 99, 9, white);
+    img.line(13, 20, 80, 40, white);
+    img.line(20, 13, 40, 80, red);
+    img.line(80, 40, 13, 20, red);
+    img.line(45, 45, 45, 45, white);
+    img = flip_vertical(&img);
 
     // save image
     let _ = img.save("output.png");
