@@ -4,3 +4,6 @@ version = "0.0.1"
 authors = ["Ilya Pleshakov <da-eto@ya.ru>"]
 description = "Experiments on Rust and graphics"
 
+[dependencies]
+image = "0.3"
+
