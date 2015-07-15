@@ -29,16 +29,26 @@ where P: Pixel + 'static,
             let a1 = if transpose {if reverse {y0} else {y1}} else {if reverse {x0} else {x1}};
             let b0 = if transpose {if reverse {x1} else {x0}} else {if reverse {y1} else {y0}};
             let b1 = if transpose {if reverse {x0} else {x1}} else {if reverse {y0} else {y1}};
+            let derr = ((b1 as i32 - b0 as i32) as f64 / (a1 - a0) as f64).abs();
+            let mut err = 0.0;
+            let mut a = a0;
+            let mut b = b0;
 
-            for a in a0..a1+1 {
-                let t = (a - a0) as f64 / (a1 - a0) as f64;
-                let b = (b0 as f64 * (1.0 - t) + b1 as f64 * t) as u32;
-
+            while a <= a1 {
                 if transpose {
                     self.put_pixel(b, a, color);
                 } else {
                     self.put_pixel(a, b, color);
                 }
+
+                err += derr;
+
+                if err > 0.5 {
+                    if b1 > b0 {b += 1;} else {b -= 1;};
+                    err -= 1.0;
+                }
+
+                a += 1;
             }
         }
 
