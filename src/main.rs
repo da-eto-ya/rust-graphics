@@ -29,8 +29,9 @@ where P: Pixel + 'static,
             let a1 = if transpose {if reverse {y0} else {y1}} else {if reverse {x0} else {x1}};
             let b0 = if transpose {if reverse {x1} else {x0}} else {if reverse {y1} else {y0}};
             let b1 = if transpose {if reverse {x0} else {x1}} else {if reverse {y0} else {y1}};
-            let derr = ((b1 as i32 - b0 as i32) as f64 / (a1 - a0) as f64).abs();
-            let mut err = 0.0;
+            let da = (a1 - a0) as i32;
+            let derr = 2 * if b1 > b0 {b1 - b0} else {b0 - b1} as i32;
+            let mut err = 0;
             let mut a = a0;
             let mut b = b0 as i32;
             let db = if b1 > b0 {1} else {-1};
@@ -44,9 +45,9 @@ where P: Pixel + 'static,
 
                 err += derr;
 
-                if err > 0.5 {
+                if err > da {
                     b += db;
-                    err -= 1.0;
+                    err -= 2 * da;
                 }
 
                 a += 1;
