@@ -32,19 +32,20 @@ where P: Pixel + 'static,
             let derr = ((b1 as i32 - b0 as i32) as f64 / (a1 - a0) as f64).abs();
             let mut err = 0.0;
             let mut a = a0;
-            let mut b = b0;
+            let mut b = b0 as i32;
+            let db = if b1 > b0 {1} else {-1};
 
             while a <= a1 {
                 if transpose {
-                    self.put_pixel(b, a, color);
+                    self.put_pixel(b as u32, a, color);
                 } else {
-                    self.put_pixel(a, b, color);
+                    self.put_pixel(a, b as u32, color);
                 }
 
                 err += derr;
 
                 if err > 0.5 {
-                    if b1 > b0 {b += 1;} else {b -= 1;};
+                    b += db;
                     err -= 1.0;
                 }
 
