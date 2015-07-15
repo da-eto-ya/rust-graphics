@@ -63,5 +63,5 @@ fn main() {
     img = flip_vertical(&img);
 
     // save image
-    let _ = img.save("output.png");
+    let _ = img.save("output.ppm");
 }
