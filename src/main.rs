@@ -53,10 +53,13 @@ fn main() {
     // image processing
     let red = image::Rgb([0xff, 0x00, 0x00]);
     let white = image::Rgb([0xff, 0xff, 0xff]);
-    img.line(13, 20, 80, 40, white);
-    img.line(20, 13, 40, 80, red);
-    img.line(80, 40, 13, 20, red);
-    img.line(45, 45, 45, 45, white);
+
+    for _ in 0..1000000 {
+        img.line(13, 20, 80, 40, white);
+        img.line(20, 13, 40, 80, red);
+        img.line(80, 40, 13, 20, red);
+    }
+
     img = flip_vertical(&img);
 
     // save image
