@@ -1,5 +1,6 @@
+use std::io;
 use std::ops::{Add, Sub};
-
+use std::path::Path;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Vec2D<T> {
@@ -47,3 +48,14 @@ impl<T> Sub<Vec3D<T>> for Vec3D<T> where T: Sub<T, Output = T> {
     }
 }
 
+pub type Vec3Df = Vec3D<f64>;
+
+#[derive(Debug)]
+pub struct Model {
+    pub verts: Vec<Vec3Df>,
+    pub faces: Vec<Vec<u32>>
+}
+
+pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Path> {
+    Ok(Model { verts: Vec::new(), faces: Vec::new() })
+}

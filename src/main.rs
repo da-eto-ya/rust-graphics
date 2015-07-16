@@ -4,6 +4,8 @@ use image::ImageBuffer;
 use image::imageops::flip_vertical;
 use painting::Painting;
 use geometry::Vec3D;
+use geometry::Model;
+use geometry::load_model_obj;
 
 mod painting;
 mod geometry;
@@ -31,4 +33,7 @@ fn main() {
     let v3 = v1 + v2;
     let v4 = v1 - v2;
     println!("{:?} {:?}", v3, v4);
+
+    let m = load_model_obj("obj/african_head.obj");
+    println!("{:?}", m);
 }
