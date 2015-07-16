@@ -68,7 +68,7 @@ struct Facet {
 
 fn parse_facet_obj(str: &str) -> Facet {
     let idx: Vec<&str> = str.split('/').collect();
-    
+
     if idx.len() == 1 {
         Facet { v: idx[0].parse::<usize>().unwrap(), t: 0, n: 0 }
     } else if idx.len() >= 3 {
@@ -91,15 +91,15 @@ pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Pat
     let reader = BufReader::new(&f);
     let mut vs = Vec::new();
     let mut fs = Vec::new();
-    
+
     for line in reader.lines().filter_map(|res| res.ok()) {
         let v: Vec<&str> = line.split(' ').collect();
-        
+
         if v.len() >= 4 && v[0] == "v" {
             let coords: Vec<f64> = v.tail().iter().map(|s| s.trim()).filter_map(
                 |s| if s == "" {None} else {Some(s.parse::<f64>().unwrap())}
                 ).collect();
-            
+
             if coords.len() >= 3 {
                 vs.push(Vec3Df { x: coords[0], y: coords[1], z: coords[2] });
             }
@@ -108,7 +108,7 @@ pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Pat
             let verts: Vec<usize> = v.tail().iter().map(|s| s.trim()).filter_map(
                 |s| if s == "" {None} else {Some(parse_facet_obj(s).v - 1)}
                 ).collect();
-            
+
             if verts.len() >= 2 {
                 fs.push(verts);
             }
@@ -117,4 +117,3 @@ pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Pat
 
     Ok(Model { verts: vs, faces: fs })
 }
-

@@ -57,4 +57,3 @@ where P: Pixel + 'static,
         self
     }
 }
-
