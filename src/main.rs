@@ -14,7 +14,7 @@ mod geometry;
 fn main() {
     // image processing
     let white = image::Rgb([0xff, 0xff, 0xff]);
-    let m = match load_model_obj("obj/african_head.obj") {
+    let m = match load_model_obj("obj/phone.obj") {
         Ok(m) => m,
         Err(..) => panic!("couldn't read input file"),
     };
@@ -47,12 +47,20 @@ fn main() {
     
     let mut img = ImageBuffer::new(width, height);
     
-    for v in m.verts.iter() {
-    	let x = pad + ((v.x - min_x) * ratio) as u32;
-    	let y = pad + ((v.y - min_y) * ratio) as u32;
-    	img.line(x, y, x, y, white);
+    for f in m.faces.iter() {
+    	let npoly = f.len();
+    	
+    	for i in 0..npoly {
+    		let v = m.verts[f[i]];
+    		let u = m.verts[f[(i + 1) % npoly]];
+	    	let x0 = pad + ((v.x - min_x) * ratio) as u32;
+	    	let y0 = pad + ((v.y - min_y) * ratio) as u32;
+	    	let x1 = pad + ((u.x - min_x) * ratio) as u32;
+	    	let y1 = pad + ((u.y - min_y) * ratio) as u32;
+	    	img.line(x0, y0, x1, y1, white);
+    	}
     }
-
+    
     img = flip_vertical(&img);
     
     // save image
