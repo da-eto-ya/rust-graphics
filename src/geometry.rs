@@ -60,12 +60,12 @@ pub struct Model {
 }
 
 pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Path> {
-    let mut f = match File::open(&path) {
+    let f = match File::open(&path) {
         Err(why)    => return Err(why),
         Ok(f)       => f,
     };
 
-    let mut reader = BufReader::new(&f);
+    let reader = BufReader::new(&f);
 
     for line in reader.lines().filter_map(|res| res.ok()) {
         print!("{}", line);

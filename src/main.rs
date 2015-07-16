@@ -4,7 +4,6 @@ use image::ImageBuffer;
 use image::imageops::flip_vertical;
 use painting::Painting;
 use geometry::Vec3D;
-use geometry::Model;
 use geometry::load_model_obj;
 
 mod painting;
@@ -36,8 +35,8 @@ fn main() {
 
     let m = match load_model_obj("obj/african_head.obj") {
         Ok(m) => m,
-        Err(why) => panic!("couldn't read input file"),
+        Err(..) => panic!("couldn't read input file"),
     };
-
+    
     println!("{:?}", m);
 }
