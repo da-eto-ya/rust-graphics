@@ -66,11 +66,20 @@ pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Pat
     };
 
     let reader = BufReader::new(&f);
-
+    let mut vs = Vec::new();
+    
     for line in reader.lines().filter_map(|res| res.ok()) {
-        print!("{}", line);
+    	let v: Vec<&str> = line.split(' ').collect();
+    	
+		if v.len() == 4 && v[0] == "v" {
+			let coords: Vec<f64> = v.tail().iter().map(|s| s.parse::<f64>().unwrap()).collect();
+			
+			if coords.len() == 3 {
+				vs.push(Vec3Df { x: coords[0], y: coords[1], z: coords[2] });
+			}
+		}
     }
 
-    Ok(Model { verts: Vec::new(), faces: Vec::new() })
+    Ok(Model { verts: vs, faces: Vec::new() })
 }
 
