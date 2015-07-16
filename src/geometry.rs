@@ -1,4 +1,6 @@
 use std::io;
+use std::io::prelude::*;
+use std::io::BufReader;
 use std::fs::File;
 use std::ops::{Add, Sub};
 use std::path::Path;
@@ -63,5 +65,12 @@ pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Pat
         Ok(f)       => f,
     };
 
+    let mut reader = BufReader::new(&f);
+
+    for line in reader.lines().filter_map(|res| res.ok()) {
+        print!("{}", line);
+    }
+
     Ok(Model { verts: Vec::new(), faces: Vec::new() })
 }
+
