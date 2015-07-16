@@ -1,4 +1,5 @@
 use std::io;
+use std::fs::File;
 use std::ops::{Add, Sub};
 use std::path::Path;
 
@@ -57,5 +58,10 @@ pub struct Model {
 }
 
 pub fn load_model_obj<P>(path: P) -> Result<Model, io::Error> where P: AsRef<Path> {
+    let mut f = match File::open(&path) {
+        Err(why)    => return Err(why),
+        Ok(f)       => f,
+    };
+
     Ok(Model { verts: Vec::new(), faces: Vec::new() })
 }

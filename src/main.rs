@@ -34,6 +34,10 @@ fn main() {
     let v4 = v1 - v2;
     println!("{:?} {:?}", v3, v4);
 
-    let m = load_model_obj("obj/african_head.obj");
+    let m = match load_model_obj("obj/african_head.obj") {
+        Ok(m) => m,
+        Err(why) => panic!("couldn't read input file"),
+    };
+
     println!("{:?}", m);
 }
