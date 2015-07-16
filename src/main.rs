@@ -3,8 +3,11 @@ extern crate image;
 use image::ImageBuffer;
 use image::imageops::flip_vertical;
 use painting::Painting;
+use geometry::Vec3D;
 
 mod painting;
+mod geometry;
+
 
 fn main() {
     // load/create image
@@ -22,4 +25,10 @@ fn main() {
 
     // save image
     let _ = img.save("output.ppm");
+
+    let v1 = Vec3D {x: 10.0, y: 12.0, z: -10.0};
+    let v2 = Vec3D {x: 1.5, y: 1.2, z: -3.0};
+    let v3 = v1 + v2;
+    let v4 = v1 - v2;
+    println!("{:?} {:?}", v3, v4);
 }
