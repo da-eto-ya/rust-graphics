@@ -51,6 +51,12 @@ impl<T> Sub<Vec3D<T>> for Vec3D<T> where T: Sub<T, Output = T> {
     }
 }
 
+pub type Vec2Di = Vec2D<i32>;
+pub type Vec2Du = Vec2D<u32>;
+pub type Vec2Df = Vec2D<f64>;
+
+pub type Vec3Di = Vec3D<i32>;
+pub type Vec3Du = Vec3D<u32>;
 pub type Vec3Df = Vec3D<f64>;
 
 #[derive(Debug)]
