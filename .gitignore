@@ -14,8 +14,7 @@ callgrind.out.*
 /target/
 
 # Testing output
-output.ppm
-output.png
+output.*
 
 # Eclipse files
 .project
