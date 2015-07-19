@@ -14,7 +14,7 @@ callgrind.out.*
 /target/
 
 # Testing output
-output.*
+/output/
 
 # Eclipse files
 .project
