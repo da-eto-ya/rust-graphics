@@ -60,25 +60,23 @@ where P: Pixel + 'static,
     }
 
     fn triangle(&mut self, v0: Vec2Du, v1: Vec2Du, v2: Vec2Du, color: P) -> &mut Self {
-        let mut v = Vec::new();
-        v.push_all(&[v0, v1, v2]);
-        v.sort_by(|a, b| a.y.cmp(&b.y));
+        let mut vs = Vec::new();
+        vs.push_all(&[v0, v1, v2]);
+        vs.sort_by(|a, b| a.y.cmp(&b.y));
 
-        if v[1].y > v[0].y {
-            let p0 = (v[1].x - v[0].x) as f64 / (v[1].y - v[0].y) as f64;
-            let p1 = (v[2].x - v[0].x) as f64 / (v[2].y - v[0].y) as f64;
+        for v in &[[vs[0], vs[1], vs[2]], [vs[2], vs[1], vs[0]]] {
+            if v[1].y != v[0].y {
+                let p0 = (v[1].x as i32 - v[0].x as i32) as f64 / (v[1].y as i32 - v[0].y as i32) as f64;
+                let p1 = (v[2].x as i32 - v[0].x as i32) as f64 / (v[2].y as i32 - v[0].y as i32) as f64;
 
-            for y in (v[0].y..v[1].y) {
-                let a0 = Vec2Du { x: v[0].x + (p0 * (y - v[0].y) as f64) as u32, y: y };
-                let a1 = Vec2Du { x: v[0].x + (p1 * (y - v[0].y) as f64) as u32, y: y };
+                for y in cmp::min(v[0].y, v[1].y)..cmp::max(v[0].y, v[1].y)+1 {
+                    let x0 = v[0].x + (p0 * (y as i32 - v[0].y as i32) as f64) as u32;
+                    let x1 = v[0].x + (p1 * (y as i32 - v[0].y as i32) as f64) as u32;
 
-                println!("{:?} {:?} {:?} {:?}", v, y, a0, a1);
-
-                self.line(
-                    a0,
-                    a1,
-                    color
-                );
+                    for x in cmp::min(x0, x1)..cmp::max(x0, x1)+1 {
+                        self.put_pixel(x, y, color);
+                    }
+                }
             }
         }
 
