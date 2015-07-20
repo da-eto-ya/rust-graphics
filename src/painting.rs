@@ -4,6 +4,7 @@ use image::{
     ImageBuffer,
     Pixel,
 };
+use std::cmp;
 use std::ops::{
     Deref,
     DerefMut,
@@ -59,6 +60,28 @@ where P: Pixel + 'static,
     }
 
     fn triangle(&mut self, v0: Vec2Du, v1: Vec2Du, v2: Vec2Du, color: P) -> &mut Self {
-        self.line(v0, v1, color).line(v1, v2, color).line(v2, v0, color)
+        let mut v = Vec::new();
+        v.push_all(&[v0, v1, v2]);
+        v.sort_by(|a, b| a.y.cmp(&b.y));
+
+        if v[1].y > v[0].y {
+            let p0 = (v[1].x - v[0].x) as f64 / (v[1].y - v[0].y) as f64;
+            let p1 = (v[2].x - v[0].x) as f64 / (v[2].y - v[0].y) as f64;
+
+            for y in (v[0].y..v[1].y) {
+                let a0 = Vec2Du { x: v[0].x + (p0 * (y - v[0].y) as f64) as u32, y: y };
+                let a1 = Vec2Du { x: v[0].x + (p1 * (y - v[0].y) as f64) as u32, y: y };
+
+                println!("{:?} {:?} {:?} {:?}", v, y, a0, a1);
+
+                self.line(
+                    a0,
+                    a1,
+                    color
+                );
+            }
+        }
+
+        self
     }
 }

@@ -18,7 +18,7 @@ fn main() {
     let white = image::Rgb([0xff, 0xff, 0xff]);
     let red = image::Rgb([0xff, 0x00, 0x00]);
 
-    let m = match load_model_obj("obj/phone.obj") {
+    let m = match load_model_obj("obj/african_head.obj") {
         Ok(m) => m,
         Err(..) => panic!("couldn't read input file"),
     };
