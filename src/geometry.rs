@@ -1,8 +1,10 @@
+use num::traits::Float;
+
 use std::io;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::File;
-use std::ops::{Add, Sub};
+use std::ops::{Add, Sub, Mul};
 use std::path::Path;
 
 #[derive(Debug, Copy, Clone)]
@@ -48,6 +50,40 @@ impl<T> Sub<Vec3D<T>> for Vec3D<T> where T: Sub<T, Output = T> {
 
     fn sub(self, other: Vec3D<T>) -> Vec3D<T> {
         Vec3D { x: self.x - other.x, y: self.y - other.y, z: self.z - other.z }
+    }
+}
+
+impl<T> Mul<Vec3D<T>> for Vec3D<T> where T: Mul<T, Output = T> + Add<T, Output = T> {
+    type Output = T;
+
+    fn mul(self, other: Vec3D<T>) -> T {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
+}
+
+impl<T> Vec3D<T> where T: Mul<T, Output = T> + Sub<T, Output = T> + Copy {
+    pub fn cross(self, other: Vec3D<T>) -> Vec3D<T> {
+        Vec3D {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x
+        }
+    }
+}
+
+impl<T> Vec3D<T> where T: Float {
+    pub fn normalized(self) -> Vec3D<T> {
+        let l = (self * self).sqrt();
+
+        if l == T::zero() {
+            self
+        } else {
+            Vec3D {
+                x: self.x / l,
+                y: self.y / l,
+                z: self.z / l
+            }
+        }
     }
 }
 

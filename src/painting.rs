@@ -70,8 +70,8 @@ where P: Pixel + 'static,
                 let p1 = (v[2].x as i32 - v[0].x as i32) as f64 / (v[2].y as i32 - v[0].y as i32) as f64;
 
                 for y in cmp::min(v[0].y, v[1].y)..cmp::max(v[0].y, v[1].y)+1 {
-                    let x0 = v[0].x + (p0 * (y as i32 - v[0].y as i32) as f64) as u32;
-                    let x1 = v[0].x + (p1 * (y as i32 - v[0].y as i32) as f64) as u32;
+                    let x0 = (v[0].x as i32 + (p0 * (y as i32 - v[0].y as i32) as f64) as i32) as u32;
+                    let x1 = (v[0].x as i32 + (p1 * (y as i32 - v[0].y as i32) as f64) as i32) as u32;
 
                     for x in cmp::min(x0, x1)..cmp::max(x0, x1)+1 {
                         self.put_pixel(x, y, color);
