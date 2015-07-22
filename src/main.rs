@@ -19,8 +19,8 @@ fn main() {
         Err(..) => panic!("couldn't read input file"),
     };
 
-    let width = 1920;
-    let pad = 10;
+    let width = 1920 as i32;
+    let pad = 10 as i32;
 
     let mut min_x = m.verts[0].x;
     let mut min_y = m.verts[0].y;
@@ -35,9 +35,9 @@ fn main() {
     }
 
     let ratio = (width - 2 * pad) as f64 / (max_x - min_x);
-    let height = ((max_y - min_y) * ratio + 2.0 * pad as f64) as u32;
+    let height = ((max_y - min_y) * ratio + 2.0 * pad as f64) as i32;
 
-    let mut img = ImageBuffer::new(width, height);
+    let mut img = ImageBuffer::new(width as u32, height as u32);
     let light = (Vec3Df { x: -10.0, y: 5.5, z: 15.0 }).normalized();
 
     for f in m.faces.iter() {
@@ -56,17 +56,17 @@ fn main() {
                     let v2 = m.verts[f[i + 1]];
 
                     img.triangle(
-                        Vec2Du {
-                            x: pad + ((v0.x - min_x) * ratio) as u32,
-                            y: pad + ((v0.y - min_y) * ratio) as u32
+                        Vec2Di {
+                            x: pad + ((v0.x - min_x) * ratio) as i32,
+                            y: pad + ((v0.y - min_y) * ratio) as i32
                         },
-                        Vec2Du {
-                            x: pad + ((v1.x - min_x) * ratio) as u32,
-                            y: pad + ((v1.y - min_y) * ratio) as u32
+                        Vec2Di {
+                            x: pad + ((v1.x - min_x) * ratio) as i32,
+                            y: pad + ((v1.y - min_y) * ratio) as i32
                         },
-                        Vec2Du {
-                            x: pad + ((v2.x - min_x) * ratio) as u32,
-                            y: pad + ((v2.y - min_y) * ratio) as u32
+                        Vec2Di {
+                            x: pad + ((v2.x - min_x) * ratio) as i32,
+                            y: pad + ((v2.y - min_y) * ratio) as i32
                         },
                         col
                     );
