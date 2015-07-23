@@ -42,7 +42,7 @@ fn main() {
     let mut img = ImageBuffer::new(width as u32, height as u32);
     let light = (Vec3Df { x: -10.0, y: 5.5, z: -115.0 }).normalized();
 
-    let mut zbuffer = vec![std::i32::MIN; (width * height) as usize];
+    let mut zbuffer = vec![vec![std::i32::MIN; height as usize]; width as usize];
 
     for f in m.faces.iter() {
         let npoly = f.len();
