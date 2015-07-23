@@ -22,15 +22,17 @@ fn main() {
     let width = 1920 as i32;
     let pad = 10 as i32;
 
+    // TODO: check m.verts size
     let mut min_x = m.verts[0].x;
-    let mut min_y = m.verts[0].y;
     let mut max_x = m.verts[0].x;
+    let mut min_y = m.verts[0].y;
     let mut max_y = m.verts[0].y;
 
     for v in m.verts.iter() {
         if v.x < min_x { min_x = v.x; }
-        if v.y < min_y { min_y = v.y; }
         if v.x > max_x { max_x = v.x; }
+
+        if v.y < min_y { min_y = v.y; }
         if v.y > max_y { max_y = v.y; }
     }
 
@@ -38,7 +40,9 @@ fn main() {
     let height = ((max_y - min_y) * ratio + 2.0 * pad as f64) as i32;
 
     let mut img = ImageBuffer::new(width as u32, height as u32);
-    let light = (Vec3Df { x: -10.0, y: 5.5, z: 15.0 }).normalized();
+    let light = (Vec3Df { x: -10.0, y: 5.5, z: -115.0 }).normalized();
+
+    let mut zbuffer = vec![std::i32::MIN; (width * height) as usize];
 
     for f in m.faces.iter() {
         let npoly = f.len();
@@ -56,19 +60,23 @@ fn main() {
                     let v2 = m.verts[f[i + 1]];
 
                     img.triangle(
-                        Vec2Di {
+                        Vec3Di {
                             x: pad + ((v0.x - min_x) * ratio) as i32,
-                            y: pad + ((v0.y - min_y) * ratio) as i32
+                            y: pad + ((v0.y - min_y) * ratio) as i32,
+                            z: (v0.z * ratio) as i32
                         },
-                        Vec2Di {
+                        Vec3Di {
                             x: pad + ((v1.x - min_x) * ratio) as i32,
-                            y: pad + ((v1.y - min_y) * ratio) as i32
+                            y: pad + ((v1.y - min_y) * ratio) as i32,
+                            z: (v1.z * ratio) as i32
                         },
-                        Vec2Di {
+                        Vec3Di {
                             x: pad + ((v2.x - min_x) * ratio) as i32,
-                            y: pad + ((v2.y - min_y) * ratio) as i32
+                            y: pad + ((v2.y - min_y) * ratio) as i32,
+                            z: (v2.z * ratio) as i32
                         },
-                        col
+                        col,
+                        &mut zbuffer
                     );
                 }
             }

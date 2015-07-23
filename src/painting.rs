@@ -13,7 +13,7 @@ use geometry::*;
 
 pub trait Painting<P> where P: Pixel {
     fn line(&mut self, v0: Vec2Di, v1: Vec2Di, color: P) -> &mut Self;
-    fn triangle(&mut self, v0: Vec2Di, v1: Vec2Di, v2: Vec2Di, color: P) -> &mut Self;
+    fn triangle(&mut self, v0: Vec3Di, v1: Vec3Di, v2: Vec3Di, color: P, zbuffer: &mut Vec<i32>) -> &mut Self;
 }
 
 impl<P, Container> Painting<P> for ImageBuffer<P, Container>
@@ -59,7 +59,7 @@ where P: Pixel + 'static,
         self
     }
 
-    fn triangle(&mut self, v0: Vec2Di, v1: Vec2Di, v2: Vec2Di, color: P) -> &mut Self {
+    fn triangle(&mut self, v0: Vec3Di, v1: Vec3Di, v2: Vec3Di, color: P, zbuffer: &mut Vec<i32>) -> &mut Self {
         let mut vs = Vec::new();
         vs.push_all(&[v0, v1, v2]);
         vs.sort_by(|a, b| a.y.cmp(&b.y));
