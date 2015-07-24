@@ -5,5 +5,5 @@ authors = ["Ilya Pleshakov <da-eto@ya.ru>"]
 description = "Experiments on Rust and graphics"
 
 [dependencies]
-image = "0.3"
-num = "0.1"
+image = "*"
+num = "*"
