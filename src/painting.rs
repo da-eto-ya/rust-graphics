@@ -60,21 +60,20 @@ where P: Pixel + 'static,
     }
 
     fn triangle(&mut self, v0: Vec3Di, v1: Vec3Di, v2: Vec3Di, color: P, zbuffer: &mut Vec<Vec<i32>>) -> &mut Self {
+        if v0.y == v1.y && v1.y == v2.y {
+            return self;
+        }
+
         let mut vs = Vec::new();
         vs.push_all(&[v0, v1, v2]);
         vs.sort_by(|a, b| a.y.cmp(&b.y));
 
         for v in &[[vs[0], vs[1], vs[2]], [vs[2], vs[1], vs[0]]] {
-
-            println!("v: {:?}", v);
-
             if v[1].y != v[0].y {
                 let p1 = (v[1].x - v[0].x) as f64 / (v[1].y - v[0].y) as f64;
                 let p2 = (v[2].x - v[0].x) as f64 / (v[2].y - v[0].y) as f64;
                 let pz1 = (v[1].z - v[0].z) as f64 / (v[1].y - v[0].y) as f64;
                 let pz2 = (v[2].z - v[0].z) as f64 / (v[2].y - v[0].y) as f64;
-
-                println!("p1: {:?} p2: {:?} pz1: {:?} pz2: {:?}", p1, p2, pz1, pz2);
 
                 for y in cmp::min(v[0].y, v[1].y)..cmp::max(v[0].y, v[1].y)+1 {
                     let x1 = v[0].x + (p1 * (y - v[0].y) as f64) as i32;
@@ -82,17 +81,11 @@ where P: Pixel + 'static,
                     let z1 = v[0].z + (pz1 * (y - v[0].y) as f64) as i32;
                     let z2 = v[0].z + (pz2 * (y - v[0].y) as f64) as i32;
 
-                    println!("y: {:?} x1: {:?} x2: {:?} z1: {:?} z2: {:?}", y, x1, x2, z1, z2);
-
                     if x1 != x2 {
                         let pz = (z2 - z1) as f64 / (x2 - x1) as f64;
 
-                        println!("pz: {:?}", pz);
-
                         for x in cmp::min(x1, x2)..cmp::max(x1, x2)+1 {
                             let z = z1 + (pz * (x - x1) as f64) as i32;
-
-                            println!("x: {:?} (pz * (x - x1)): {:?} z: {:?}", x, (pz * (x - x1) as f64), z);
 
                             if zbuffer[x as usize][y as usize] < z {
                                 self.put_pixel(x as u32, y as u32, color);
@@ -100,9 +93,7 @@ where P: Pixel + 'static,
                             }
                         }
                     } else {
-                        let z = cmp::min(z1, z2);
-
-                        println!("x1 = x2: {:?} z: {:?}", x1, z);
+                        let z = cmp::max(z1, z2);
 
                         if zbuffer[x1 as usize][y as usize] < z {
                             self.put_pixel(x1 as u32, y as u32, color);

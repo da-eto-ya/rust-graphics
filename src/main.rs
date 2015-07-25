@@ -49,7 +49,7 @@ fn main() {
 
         if npoly >= 3 {
             let v0 = m.verts[f[0]];
-            let l = light * (m.verts[f[1]] - v0).cross((m.verts[f[2]] - v0)).normalized();
+            let l = light * ((m.verts[f[2]] - v0).cross((m.verts[f[1]] - v0))).normalized();
 
             if l > 0.0f64 {
                 let dens = (0xff as f64 * l) as u8;

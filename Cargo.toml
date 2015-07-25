@@ -1,6 +1,6 @@
 [package]
 name = "rust-graphics"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Ilya Pleshakov <da-eto@ya.ru>"]
 description = "Experiments on Rust and graphics"
 
