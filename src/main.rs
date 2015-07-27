@@ -48,6 +48,8 @@ fn main() {
     let light = (Vec3Df { x: 0.0, y: 0.0, z: -1.0 }).normalized();
 
     let mut zbuffer = vec![vec![std::i32::MIN; height as usize]; width as usize];
+    let padding = Vec3Di { x: pad, y: pad, z: pad };
+    let min_bound = Vec3Df { x: min_x, y: min_y, z: min_z };
 
     for f in m.faces.iter() {
         let npoly = f.len();
@@ -65,21 +67,9 @@ fn main() {
                     let v2 = m.verts[f[i + 1]];
 
                     img.triangle(
-                        Vec3Di {
-                            x: pad + ((v0.x - min_x) * ratio) as i32,
-                            y: pad + ((v0.y - min_y) * ratio) as i32,
-                            z: pad + ((v0.z - min_z) * ratio) as i32
-                        },
-                        Vec3Di {
-                            x: pad + ((v1.x - min_x) * ratio) as i32,
-                            y: pad + ((v1.y - min_y) * ratio) as i32,
-                            z: pad + ((v1.z - min_z) * ratio) as i32
-                        },
-                        Vec3Di {
-                            x: pad + ((v2.x - min_x) * ratio) as i32,
-                            y: pad + ((v2.y - min_y) * ratio) as i32,
-                            z: pad + ((v2.z - min_z) * ratio) as i32
-                        },
+                        padding + (v0 - min_bound).scale(ratio).to_i32(),
+                        padding + (v1 - min_bound).scale(ratio).to_i32(),
+                        padding + (v2 - min_bound).scale(ratio).to_i32(),
                         col,
                         &mut zbuffer
                     );

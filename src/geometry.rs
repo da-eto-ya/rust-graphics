@@ -87,6 +87,16 @@ impl<T> Vec3D<T> where T: Float {
     }
 }
 
+impl Vec3Df {
+    pub fn to_i32(self) -> Vec3Di {
+        Vec3Di { x: self.x as i32, y: self.y as i32, z: self.z as i32 }
+    }
+
+    pub fn scale(self, s: f64) -> Self {
+        Vec3Df { x: self.x * s, y: self.y * s, z: self.z * s }
+    }
+}
+
 pub type Vec2Di = Vec2D<i32>;
 pub type Vec2Du = Vec2D<u32>;
 pub type Vec2Df = Vec2D<f64>;
