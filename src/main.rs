@@ -23,33 +23,22 @@ fn main() {
     let pad = 10 as i32;
 
     // TODO: check m.verts size
-    let mut min_x = m.verts[0].x;
-    let mut max_x = m.verts[0].x;
-    let mut min_y = m.verts[0].y;
-    let mut max_y = m.verts[0].y;
-    let mut min_z = m.verts[0].z;
-    let mut max_z = m.verts[0].z;
+    let mut min_coords = Vec3Df { x: m.verts[0].x, y: m.verts[0].y, z: m.verts[0].z };
+    let mut max_coords = Vec3Df { x: m.verts[0].x, y: m.verts[0].y, z: m.verts[0].z };
 
-    for v in m.verts.iter() {
-        if v.x < min_x { min_x = v.x; }
-        if v.x > max_x { max_x = v.x; }
-
-        if v.y < min_y { min_y = v.y; }
-        if v.y > max_y { max_y = v.y; }
-
-        if v.z < min_z { min_z = v.z; }
-        if v.z > max_z { max_z = v.z; }
+    for &v in m.verts.iter() {
+        min_coords.min_bound(v);
+        max_coords.max_bound(v);
     }
 
-    let ratio = (width - 2 * pad) as f64 / (max_x - min_x);
-    let height = ((max_y - min_y) * ratio + 2.0 * pad as f64) as i32;
+    let ratio = (width - 2 * pad) as f64 / (max_coords.x - min_coords.x);
+    let height = ((max_coords.y - min_coords.y) * ratio + 2.0 * pad as f64) as i32;
 
     let mut img = ImageBuffer::new(width as u32, height as u32);
     let light = (Vec3Df { x: 0.0, y: 0.0, z: -1.0 }).normalized();
 
     let mut zbuffer = vec![vec![std::i32::MIN; height as usize]; width as usize];
     let padding = Vec3Di { x: pad, y: pad, z: pad };
-    let min_bound = Vec3Df { x: min_x, y: min_y, z: min_z };
 
     for f in m.faces.iter() {
         let npoly = f.len();
@@ -67,9 +56,9 @@ fn main() {
                     let v2 = m.verts[f[i + 1]];
 
                     img.triangle(
-                        padding + (v0 - min_bound).scale(ratio).to_i32(),
-                        padding + (v1 - min_bound).scale(ratio).to_i32(),
-                        padding + (v2 - min_bound).scale(ratio).to_i32(),
+                        padding + (v0 - min_coords).scale(ratio).to_i32(),
+                        padding + (v1 - min_coords).scale(ratio).to_i32(),
+                        padding + (v2 - min_coords).scale(ratio).to_i32(),
                         col,
                         &mut zbuffer
                     );

@@ -71,18 +71,18 @@ impl<T> Vec3D<T> where T: Mul<T, Output = T> + Sub<T, Output = T> + Copy {
     }
 }
 
-impl<T> Vec3D<T> where T: PartialOrd {
+impl<T> Vec3D<T> where T: Ord {
     pub fn min_bound(&mut self, v: Vec3D<T>) -> &mut Self {
         if v.x < self.x { self.x = v.x; }
         if v.y < self.y { self.y = v.y; }
         if v.z < self.z { self.z = v.z; }
         self
     }
-
+    
     pub fn max_bound(&mut self, v: Vec3D<T>) -> &mut Self {
-        if v.x > self.x { self.x = v.x; }
-        if v.y > self.y { self.y = v.y; }
-        if v.z > self.z { self.z = v.z; }
+        if v.x < self.x { self.x = v.x; }
+        if v.y < self.y { self.y = v.y; }
+        if v.z < self.z { self.z = v.z; }
         self
     }
 }
