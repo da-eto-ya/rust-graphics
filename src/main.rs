@@ -47,7 +47,7 @@ fn main() {
             let v0 = m.verts[f[0]];
             let l = light * ((m.verts[f[2]] - v0).cross((m.verts[f[1]] - v0))).normalized();
 
-            if l > 0.0f64 {
+            if l > 0.0 {
                 let dens = (255.0 * l) as u8;
                 let col = image::Rgb([dens, dens, dens]);
 
