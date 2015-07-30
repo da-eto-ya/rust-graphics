@@ -62,7 +62,7 @@ impl<T> Mul<Vec3D<T>> for Vec3D<T> where T: Mul<T, Output = T> + Add<T, Output =
 }
 
 impl<T> Vec3D<T> where T: Mul<T, Output = T> + Sub<T, Output = T> + Copy {
-    pub fn cross(self, other: Vec3D<T>) -> Vec3D<T> {
+    pub fn cross(&self, other: Vec3D<T>) -> Vec3D<T> {
         Vec3D {
             x: self.y * other.z - self.z * other.y,
             y: self.z * other.x - self.x * other.z,
@@ -104,11 +104,11 @@ impl<T> Vec3D<T> where T: Float {
 }
 
 impl Vec3Df {
-    pub fn to_i32(self) -> Vec3Di {
+    pub fn to_i32(&self) -> Vec3Di {
         Vec3Di { x: self.x as i32, y: self.y as i32, z: self.z as i32 }
     }
 
-    pub fn scale(self, s: f64) -> Self {
+    pub fn scale(&self, s: f64) -> Self {
         Vec3Df { x: self.x * s, y: self.y * s, z: self.z * s }
     }
 }
