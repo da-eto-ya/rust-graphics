@@ -18,3 +18,5 @@ callgrind.out.*
 
 # Eclipse files
 .project
+# temp
+*.tmp
